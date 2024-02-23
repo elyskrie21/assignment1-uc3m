@@ -1,0 +1,132 @@
+Table Product {
+  name varchar [pk]
+  coffea varchar
+  varietal varchar
+  origin varchar
+  roasting varchar
+  decaf boolean
+}
+
+Table ProductFormat {
+  product_name varchar [ref: > Product.name]
+  format varchar
+  packaging varchar
+  
+}
+
+Table Reference {
+  barcode varchar [pk]
+  product_name varchar [ref: > Product.name]
+  packaging varchar
+  retail_price decimal
+  cur_stock int
+  min_stock int
+  max_stock int
+}
+
+Table ReplacementOrder {
+  id int [pk]
+  supplier varchar [ref: > Supplier.name]
+  reference varchar [ref: > Reference.barcode]
+  quantity int
+  order_date date
+  order_time time
+  status varchar
+  total_payment decimal
+  receive_date datetime
+}
+
+Table Supplier {
+  name varchar [pk]
+  prov_taxid varchar
+  prov_bankacc varchar
+  prov_address varchar
+  prov_country varchar
+  prov_person varchar
+  prov_email varchar
+  prov_mobile varchar
+  commercial_address varchar [unique]
+}
+
+Table CustomerOrder {
+  id int [pk]
+  order_date date
+  order_time time
+  dlivadd_id int [ref: > DeliveryAddress.id]
+  dliv_date date
+  dliv_time time
+  reference varchar [ref: > Reference.barcode]
+  quantity int
+}
+
+Table DeliveryAddress {
+  id int [pk]
+  dliv_waytype varchar
+  dliv_wayname varchar
+  dliv_gate varchar
+  dliv_block varchar
+  dliv_stairw varchar
+  dliv_floor varchar
+  dliv_door varchar
+  dliv_zip varchar
+  dliv_town varchar
+  dliv_country varchar
+}
+
+Table CreditCard {
+  card_number varchar [pk]
+  card_company varchar
+  card_holder varchar
+  card_expiratn date
+}
+
+Table BillingAddress {
+  id int [pk]
+  bill_gate varchar
+  bill_block varchar
+  bill_stairw varchar
+  bill_floor varchar
+  bill_door varchar
+  bill_zip varchar
+  bill_town varchar
+  bill_country varchar
+}
+
+Table Client {
+  email varchar [pk]
+  mobile varchar
+}
+
+Table RegisteredClient {
+  username varchar [pk]
+  reg_date date
+  reg_time time
+  user_passw varchar
+  client_name varchar
+  client_surn1 varchar
+  client_surn2 varchar
+  client_email varchar [ref: > Client.email]
+  client_mobile varchar [ref: > Client.mobile]
+  contact_preference varchar
+  voucher_id int [ref: > Voucher.id]
+}
+
+Table Voucher {
+  id int [pk]
+  discount decimal
+  date date
+}
+
+Table Comment {
+  id int [pk]
+  post_date date
+  post_time time
+  title varchar
+  text text
+  score int
+  likes int
+  endorsed boolean
+  
+}
+
+
