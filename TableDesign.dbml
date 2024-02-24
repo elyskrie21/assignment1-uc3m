@@ -1,0 +1,141 @@
+// Use DBML to define your database structure
+// Docs: https://dbml.dbdiagram.io/docs
+
+
+Table product {
+  id bigint [primary key]
+  name varchar [unique]
+  coffea varchar
+  varietal varchar
+  origin varchar
+  roasting varchar
+  decaf bool
+  format varchar
+  packaging varchar
+}
+
+Table reference {
+  id bigint [primary key]
+  product bigint [ref: - product.id] // one-to-one for each product has one reference
+  barcode varchar [unique]
+  retail_price bigint
+  cur_stock bigint [default: 0]
+  min_stock bigint [default: 5]
+  max_stock bigint [default: 15]
+}
+
+Table replacementOrder {
+  id bigint [primary key]
+  supplier bigint [ref: > supplier.id] // many-to-one since many replacement orders can belong to one supplier
+  reference bigint [ref: > reference.id] // many-to-one since many replacement orders can belong to one reference
+  Quantity bigint
+  OrderTime varchar
+  OrderDate varchar
+  Status varchar
+  total_payment bigint
+  recieve_date varchar [null]
+}
+
+Table supplier {
+  id bigint [primary key]
+  name varchar [unique]
+  PROV_TAXID varchar [unique]
+  PROV_BANKACC varchar [unique]
+  PROV_ADDRESS varchar [unique]
+  PROV_COUNTRY varchar
+  PROV_PERSON varchar [unique]
+  Cost_Price bigint
+  PROV_EMAIl varchar [unique]
+  Prov_MOBILE varchar [unique]
+}
+
+Table customerOrder {
+  id bigint [primary key]
+  orderdate varchar
+  ordertime varchar
+  DeliveryAddress bigint [ref: > Address.id] // many-to-one as many custom orders can have the same delivery address
+  DLIV_DATE varchar
+  DLIV_TIME varchar
+}
+
+Table Address {
+  id bigint [primary key]
+  WAYTYPE varchar 
+  WAYNAME varchar
+  GATE varchar
+  BLOCK varchar
+  STAIRW varchar
+  FLOOR varchar
+  DOOR varchar
+  ZIP varchar
+  TOWN varchar
+  COUNTRY varchar
+}
+
+Table Billing {
+  id bigint [primary key]
+  payment bigint [ref: - Payment.id] // each bill has one payment
+  CustomerOrder bigint [ref: - customerOrder.id] // each bill has one order
+  CreditCard bigint [ref: > CreditCard.id] // many bills can have the same credit card
+  BillingAdress bigint [ref: > Address.id] // many bills can have the same billing address
+}
+
+Table Payment {
+  id bigint [primary key]
+  PAYMENT_TYPE varchar
+  PAYMENT_DATE varchar
+  PAYMENT_TIME varchar
+}
+
+Table CreditCard {
+  id bigint [primary key]
+  CARD_NUMBER bigint
+  CARD_HOLDER varchar
+  CARD_EXPIRATN varchar
+}
+
+Table Item {
+  id bigint [primary key]
+  CustomerOrder bigint [ref: > customerOrder.id] // many Items can have the same customer order
+  Reference bigint [ref: - reference.id] // each Item has one Reference 
+  Quantity bigint
+  BASE_PRICE bigint
+  Total_Price bigint
+}
+
+Table Client {
+  email varchar [pk]
+  mobile varchar
+}
+
+Table RegisteredClient {
+  username varchar [pk]
+  reg_date date
+  reg_time time
+  user_passw varchar
+  client_name varchar
+  client_surn1 varchar
+  client_surn2 varchar
+  client_email varchar [ref: > Client.email]
+  client_mobile varchar [ref: > Client.mobile]
+  contact_preference varchar
+  voucher_id int [ref: > Voucher.id]
+}
+
+Table Voucher {
+  id int [pk]
+  discount decimal
+  date date
+}
+
+Table Comment {
+  id int [pk]
+  post_date date
+  post_time time
+  title varchar
+  text text
+  score int
+  likes int
+  endorsed boolean
+  
+}
