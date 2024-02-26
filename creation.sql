@@ -8,5 +8,6 @@ CREATE TABLE product (
   dcafprocess VARCHAR2(100)
   format VARCHAR2(100)
   packaging VARCHAR2(100)
+  CONSTRAINT pk_product PRIMARY KEY(id)
 )
 
