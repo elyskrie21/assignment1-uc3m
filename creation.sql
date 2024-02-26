@@ -26,3 +26,20 @@ CREATE TABLE reference (
   CONSTRAINT valid_max_min CHECK (min_stock <= max_stock),
   CONSTRAINT fk_product FOREIGN KEY(product_id) REFERENCES TO product(id)
 );
+
+CREATE TABLE replacementOrder (
+  id LONG,
+  orderdate CHAR(14),
+  ordertime CHAR(14),
+  status CHAR(30),
+  supplier_id LONG,
+  reference_id LONG,
+  quantity CHAR(2),
+  total_payment CHAR(14), /* product of quantity and price from supplier? */
+  deliveryinfo_id LONG,
+  CONSTRAINT pk_reporder PRIMARY KEY(id),
+  CONSTRAINT fk_supplier FOREIGN KEY(supplier_id) REFERENCES TO supplier(id),
+  CONSTRAINT fk_ref FOREIGN KEY(reference_id) REFERENCES TO reference(id),
+  CONSTRAINT fk_delivinfo FOREIGN KEY(deliveryinfo_id) REFERENCES TO deliveryinfo(id)
+);
+
