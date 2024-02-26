@@ -57,15 +57,32 @@ CREATE TABLE customerOrder (
 CREATE TABLE deliveryInfo (
   id LONG,
   dliv_date CHAR(14),
-  dliv_time CHAR(14)
+  dliv_time CHAR(14),
+  CONSTRAINT pk_deliveryinfo PRIMARY KEY(id)
 );
 
 CREATE TABLE delivery (
   id LONG,
   item_id LONG,
   address_id LONG,
-  deliveryinfo_id LONG
+  deliveryinfo_id LONG,
+  CONSTRAINT pk_delivery PRIMARY KEY(id)
 );
+
+CREATE TABLE supplier (
+  id LONG,
+  name CHAR(35) UNIQUE,
+  prov_taxid CHAR(10) UNIQUE,
+  prov_bankacc CHAR(30) UNIQUE,
+  prov_address CHAR(120) UNIQUE,
+  prov_country CHAR(45) UNIQUE,
+  prov_person CHAR(45) UNIQUE,
+  prov_email CHAR(60) UNIQUE,
+  prov_mobile CHAR(9) UNIQUE,
+  cost_price CHAR(12),
+  CONSTRAINT pk_supplier PRIMARY KEY(id)
+);
+  
 
 CREATE TABLE comment (
   id LONG,
