@@ -33,7 +33,7 @@ Table replacementOrder {
   OrderDate varchar
   Status varchar
   total_payment bigint
-  recieve_date varchar [null]
+  DLIV_DATE varchar [null]
 }
 
 Table supplier {
@@ -49,13 +49,24 @@ Table supplier {
   Prov_MOBILE varchar [unique]
 }
 
-Table customerOrder {
+Table ReplacementOrder {
   id bigint [primary key]
-  orderdate varchar
-  ordertime varchar
-  DeliveryAddress bigint [ref: > Address.id] // many-to-one as many custom orders can have the same delivery address
-  DLIV_DATE varchar
-  DLIV_TIME varchar
+  ORDERDATE varchar
+  ORDERTIME varchar
+  STATUS varchar
+  SUPPLIER bigint [ref: > supplier.id] // many replacement orders can be from the same supplier
+  REFERENCE bigint [ref: > reference.id] // many replacement orders can be for the same reference
+  Quantity bigint
+  TOTAL_PAYMENT decimal
+  DeliveryInfo bigint [ref: - DeliveryInfo.id] // one replacemnt order arrives at one point in time
+}
+
+Table CustomerOrder {
+  id bigint [primary key]
+  Client bigint [ref: > Client.id] // many customer orders can be from the same client
+  ORDERDATE varchar
+  ORDERTIME varchar
+  Address bigint [ref: > Address.id] // many customer orders can go to the same address
 }
 
 Table Address {
@@ -72,19 +83,27 @@ Table Address {
   COUNTRY varchar
 }
 
-Table Billing {
+Table DeliveryInfo {
   id bigint [primary key]
-  payment bigint [ref: - Payment.id] // each bill has one payment
-  CustomerOrder bigint [ref: - customerOrder.id] // each bill has one order
-  CreditCard bigint [ref: > CreditCard.id] // many bills can have the same credit card
-  BillingAdress bigint [ref: > Address.id] // many bills can have the same billing address
+  DLIV_DATE varchar
+  DLIV_TIME varchar
 }
 
-Table Payment {
+Table Delivery {
+  id bigint [primary key]
+  ITEM bigint [ref: - Item.id] // one item is part of one delivery
+  Address bigint [ref : > Address.id] // many deliveries can go to the same address
+  DeliveryInfo bigint [ref: > DeliveryInfo.id] // many deliveries can arrive at the same time
+}
+
+Table Billing {
   id bigint [primary key]
   PAYMENT_TYPE varchar
   PAYMENT_DATE varchar
   PAYMENT_TIME varchar
+  CustomerOrder bigint [ref: - CustomerOrder.id] // each bill has one order
+  CreditCard bigint [ref: > CreditCard.id] // many bills can have the same credit card
+  BillingAdress bigint [ref: > Address.id] // many bills can have the same billing address
 }
 
 Table CreditCard {
@@ -96,7 +115,7 @@ Table CreditCard {
 
 Table Item {
   id bigint [primary key]
-  CustomerOrder bigint [ref: > customerOrder.id] // many Items can have the same customer order
+  CustomerOrder bigint [ref: > CustomerOrder.id] // many Items can have the same customer order
   Reference bigint [ref: - reference.id] // each Item has one Reference 
   Quantity bigint
   BASE_PRICE bigint
@@ -104,23 +123,30 @@ Table Item {
 }
 
 Table Client {
-  email varchar [pk]
-  mobile varchar
+  id bigint [primary key]
+  CLIENT_EMAIL varchar
+  CLIENT_MOBILE varchar
 }
 
 Table RegisteredClient {
-  username varchar [pk]
+  id bigint [primary key]
+  username varchar
   reg_date date
   reg_time time
   user_passw varchar
   client_name varchar
   client_surn1 varchar
   client_surn2 varchar
-  client_email varchar [ref: > Client.email]
-  client_mobile varchar [ref: > Client.mobile]
-  contact_preference varchar
+  Client bigint [ref: - Client.id] // all registered clients are clients 
+  contact_preference varchar [default: "sms"]
   voucher_id int [ref: > Voucher.id]
 }
+
+Table RegisteredClientAddress {
+  id bigint [primary key]
+  RegisteredClient bigint [ref: > RegisteredClient.id] 
+  Address bigint [ref: - Address.id]
+} 
 
 Table Voucher {
   id int [pk]
@@ -130,12 +156,13 @@ Table Voucher {
 
 Table Comment {
   id int [pk]
+  RegisteredClient bigint [ref: - RegisteredClient.id] // one comment belongs to one user 
   post_date date
   post_time time
   title varchar
   text text
   score int
-  likes int
+  likes int [default: 0]
   endorsed boolean
   
 }
