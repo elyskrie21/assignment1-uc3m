@@ -60,6 +60,11 @@ CREATE TABLE deliveryInfo (
   dliv_time CHAR(14)
 );
 
+CREATE TABLE delivery (
+  id LONG,
+  item_id LONG,
+  address_id LONG,
+  deliveryinfo_id LONG
+);
 
-  
-  
+
