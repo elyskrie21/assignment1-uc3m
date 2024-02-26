@@ -43,3 +43,16 @@ CREATE TABLE replacementOrder (
   CONSTRAINT fk_delivinfo FOREIGN KEY(deliveryinfo_id) REFERENCES TO deliveryinfo(id)
 );
 
+CREATE TABLE customerOrder (
+  id LONG,
+  client_id LONG,
+  orderdate CHAR(14),
+  ordertime CHAR(14),
+  address_id LONG,
+  CONSTRAINT pk_custorder PRIMARY KEY(id),
+  CONSTRAINT fk_client_id FOREIGN KEY(client_id) REFERENCES TO client(id),
+  CONSTRAINT fk_address_id FOREIGN KEY(address_id) REFERENCES TO address(id)
+);
+
+
+  
