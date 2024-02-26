@@ -54,5 +54,12 @@ CREATE TABLE customerOrder (
   CONSTRAINT fk_address_id FOREIGN KEY(address_id) REFERENCES TO address(id)
 );
 
+CREATE TABLE deliveryInfo (
+  id LONG,
+  dliv_date CHAR(14),
+  dliv_time CHAR(14)
+);
 
+
+  
   
