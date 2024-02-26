@@ -11,3 +11,17 @@ CREATE TABLE product (
   CONSTRAINT pk_product PRIMARY KEY(id)
 );
 
+
+
+CREATE TABLE commet (
+  id LONG,
+  post_date CHAR(100),
+  post_time CHAR(100),
+  title CHAR(100),
+  text CHAR(100),
+  score CHAR(100),
+  likes CHAR(100),
+  endorsed CHAR(12)
+  CONSTRAINT pk_product PRIMARY KEY(id)
+  ); 
+  
