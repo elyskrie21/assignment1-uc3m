@@ -67,4 +67,17 @@ CREATE TABLE delivery (
   deliveryinfo_id LONG
 );
 
-
+CREATE TABLE comment (
+  id LONG,
+  RegisteredClientID LONG,
+  post_date CHAR(100),
+  post_time CHAR(100),
+  title CHAR(100),
+  text CHAR(100),
+  score CHAR(100),
+  likes CHAR(100) DEFAULT '0',
+  endorsed CHAR(12),
+  CONSTRAINT pk_product PRIMARY KEY(id),
+  FOREIGN KEY (RegisteredClientID) REFERENCES RegisteredClient(ID),
+  ); 
+  
