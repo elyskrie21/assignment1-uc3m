@@ -115,10 +115,56 @@ CREATE TABLE creditCard (
   card_company CHAR(15),
   card_number CHAR(20) UNIQUE,
   card_holder CHAR(30),
-  card_expiratn CHAR(7)
+  card_expiratn CHAR(7),
   CONSTRAINT pk_creditcard PRIMARY KEY(id)
 );
 
+CREATE TABLE item (
+  id LONG,
+  customerorder_id LONG,
+  reference_id LONG,
+  quantity CHAR(2),
+  base_price CHAR(10),
+  total_price CHAR(20), /* specify that this is quantity times base_price? */
+  CONSTRAINT pk_item PRIMARY KEY(id),
+  CONSTRAINT fk_customer_id FOREIGN KEY(customerorder_id) REFERENCES TO customerOrder(id),
+  CONSTRAINT fk_reference_id FOREIGN KEY(reference_id) REFERENCES TO reference(id)
+);
+
+CREATE TABLE client (
+  id LONG,
+  client_email CHAR(60),
+  client_mobile CHAR(9),
+  CONSTRAINT pk_client PRIMARY KEY(id)
+);
+
+CREATE TABLE registeredClient (
+  id LONG,
+  client_id LONG,
+  address_id LONG,
+  creditcard_id LONG,
+  username CHAR(30),
+  reg_date CHAR(14),
+  reg_time CHAR(14),
+  user_passw CHAR(15),
+  client_name CHAR(35),
+  client_surn1 CHAR(30),
+  client_surn2 CHAR(30) OPTION,
+  contact_preference CHAR(30),
+  voucher_id LONG,
+  CONSTRAINT pk_regclient PRIMARY KEY(id),
+  CONSTRAINT fk_client_id FOREIGN KEY(client_id) REFERENCES TO client(id),
+  CONSTRAINT fk_address_id FOREIGN KEY(address_id) REFERENCES TO address(id),
+  CONSTRAINT fk_creditcard_id FOREIGN KEY(creditcard_id) REFERENCES TO creditCard(id),
+);
+
+CREATE TABLE voucher (
+  id LONG,
+  discount CHAR(3),
+  voucher_date CHAR(14),
+  CONSTRAINT pk_voucher PRIMARY KEY(id)
+);
+  
 CREATE TABLE comment (
   id LONG,
   RegisteredClientID LONG,
