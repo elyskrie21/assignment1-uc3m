@@ -83,6 +83,17 @@ CREATE TABLE supplier (
   CONSTRAINT pk_supplier PRIMARY KEY(id)
 );
   
+CREATE TABLE billing (
+  id LONG,
+  customerorder_id LONG,
+  creditcard_id LONG OPTION,
+  payment_type CHAR(15),
+  payment_date CHAR(14),
+  payment_time CHAR(14),
+  CONSTRAINT pk_billing PRIMARY KEY(id),
+  CONSTRAINT fk_customer_id FOREIGN KEY(customerorder_id) REFERENCES TO customerOrder(id),
+  CONSTRAINT fk_creditcard_id FOREIGN KEY(creditcard_id) REFERENCES TO creditCard(id)
+);
 
 CREATE TABLE comment (
   id LONG,
