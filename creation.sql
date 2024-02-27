@@ -110,6 +110,15 @@ CREATE TABLE address (
   CONSTRAINT pk_address PRIMARY KEY(id)
 );
 
+CREATE TABLE creditCard (
+  id LONG,
+  card_company CHAR(15),
+  card_number CHAR(20) UNIQUE,
+  card_holder CHAR(30),
+  card_expiratn CHAR(7)
+  CONSTRAINT pk_creditcard PRIMARY KEY(id)
+);
+
 CREATE TABLE comment (
   id LONG,
   RegisteredClientID LONG,
