@@ -95,6 +95,21 @@ CREATE TABLE billing (
   CONSTRAINT fk_creditcard_id FOREIGN KEY(creditcard_id) REFERENCES TO creditCard(id)
 );
 
+CREATE TABLE address (
+  id LONG,
+  waytype CHAR(10),
+  wayname CHAR(30),
+  gate CHAR(3) OPTION,
+  block CHAR(1) OPTION,
+  stairw CHAR(2) OPTION,
+  floor CHAR(7) OPTION,
+  door CHAR(2) OPTION,
+  zip CHAR(5),
+  town CHAR(45),
+  country CHAR(45),
+  CONSTRAINT pk_address PRIMARY KEY(id)
+);
+
 CREATE TABLE comment (
   id LONG,
   RegisteredClientID LONG,
