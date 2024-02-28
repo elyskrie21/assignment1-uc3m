@@ -36,7 +36,7 @@ CREATE TABLE supplier (
   prov_bankacc CHAR(30) UNIQUE,
   prov_address CHAR(120) UNIQUE,
   prov_country CHAR(45) UNIQUE,
-  prov_person CHAR(45) UNIQUE,
+  prov_person CHAR(90) UNIQUE,
   prov_email CHAR(60) UNIQUE,
   prov_mobile CHAR(9) UNIQUE,
   cost_price NUMBER,
