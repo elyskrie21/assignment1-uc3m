@@ -73,10 +73,27 @@ CREATE TABLE replacementOrder (
 
 CREATE TABLE client (
   client_email CHAR(60) NULL,
-  client_mobile CHAR(9) NULL
+  client_mobile CHAR(9) NULL,
+  client_name CHAR(35) NULL,
+  client_surn1 CHAR(30) NULL,
+  client_surn2 CHAR(30) NULL,
+  card_number CHAR(20) NULL,
+  CONSTRAINT pk_client PRIMARY KEY(client_email, client_mobile),
+  CONSTRAINT fk_client FOREIGN KEY(card_number) REFERENCES creditCard(card_number)
 );
 
 -- successful creation
+
+CREATE TABLE registeredClient (
+  client_email CHAR(60),
+  client_mobile CHAR(9),
+  username CHAR(30),
+  reg_date CHAR(14),
+  reg_time CHAR(14),
+  user_passw CHAR(15),
+  contact_preference CHAR(30)
+  CONSTRAINT pk_regclient PRIMARY KEY(client_email, client_mobile)
+);
 
 
 CREATE TABLE address (
@@ -89,27 +106,48 @@ CREATE TABLE address (
   door CHAR(2) NULL,
   zip CHAR(5) NOT NULL,
   town CHAR(45) NOT NULL,
-  country CHAR(45) NOT NULL
+  country CHAR(45) NOT NULL,
+  client_email CHAR(60) NULL,
+  client_mobile CHAR(9) NULL
 );
 
 -- successful creation
 
 CREATE TABLE customerOrder (
-  client_id NUMBER,
+  client_email CHAR(60),
+  client_mobile CHAR(9),
   orderdate CHAR(14),
   ordertime CHAR(14),
-  address_id NUMBER,
-  CONSTRAINT pk_custorder PRIMARY KEY(id),
-  CONSTRAINT fk_client_id FOREIGN KEY(client_id) REFERENCES client(id),
-  CONSTRAINT fk_address_id FOREIGN KEY(address_id) REFERENCES address(id)
+  product CHAR(50),
+  barcode CHAR(15),
+  prodtype CHAR(20),
+  packaging CHAR(15),
+  town CHAR(45),
+  quantity CHAR(2)
+  CONSTRAINT fk_productinfo FOREIGN KEY(product, barcode, prodtype, packaging) 
+  REFERENCES orderedProdInfo(product, barcode, prodtype, packaging)
  );
 
-CREATE TABLE delivery (
-  item_id NUMBER,
-  address_id NUMBER,
-  deliveryinfo_id NUMBER,
-  CONSTRAINT pk_delivery PRIMARY KEY(id)
+CREATE TABLE orderedProdInfo (
+  product CHAR(50),
+  barcode CHAR(15),
+  prodtype CHAR(20),
+  packaging CHAR(15),
+  coffea CHAR(20),
+  varietal CHAR(30),
+  origin CHAR(15),
+  roasting CHAR(10),
+  dcafprocess CHAR(12),
+  base_price CHAR(10)
+  CONSTRAINT pk_ordered PRIMARY KEY(product, barcode, prodtype, packaging)
 );
+
+-- CREATE TABLE delivery (
+--   item_id NUMBER,
+--   address_id NUMBER,
+--   deliveryinfo_id NUMBER,
+--   CONSTRAINT pk_delivery PRIMARY KEY(id)
+-- );
 
 
 CREATE TABLE creditCard (
@@ -123,30 +161,15 @@ CREATE TABLE creditCard (
 -- successful creation
 
 CREATE TABLE billing (
-  customerorder_id NUMBER,
-  creditcard_id NUMBER,
   payment_type CHAR(15),
-  payment_date CHAR(14),
+  payment_date CHAR(14), -- payment_date and payment_time correspond with order_date and order_time
   payment_time CHAR(14),
-  CONSTRAINT pk_billing PRIMARY KEY(id),
-  CONSTRAINT fk_customer_id FOREIGN KEY(customerorder_id) REFERENCES customerOrder(id),
-  CONSTRAINT fk_creditcard_id FOREIGN KEY(creditcard_id) REFERENCES creditCard(id)
-);
-
-CREATE TABLE registeredClient (
-  client_id NUMBER,
-  address_id NUMBER,
-  creditcard_id NUMBER,
-  username CHAR(30),
-  reg_date CHAR(14),
-  reg_time CHAR(14),
-  user_passw CHAR(15),
-  client_name CHAR(35),
-  client_surn1 CHAR(30),
-  client_surn2 CHAR(30),
-  contact_preference CHAR(30),
-  voucher_id NUMBER,
-  CONSTRAINT pk_regclient PRIMARY KEY(id)
+  client_email CHAR(60),
+  client_mobile CHAR(9),
+  town CHAR(45),
+  card_number CHAR(20),
+  CONSTRAINT pk_billing PRIMARY KEY(payment_date, payment_time),
+  CONSTRAINT fk_client FOREIGN KEY(payment_date, payment_time) REFERENCES customerOrder(orderdate, ordertime),
 );
 
 
@@ -163,11 +186,11 @@ CREATE TABLE comments (
   FOREIGN KEY (RegisteredClientID) REFERENCES RegisteredClient(ID)
 );
 
-CREATE TABLE voucher (
-  discount CHAR(3),
-  voucher_date CHAR(14),
-  CONSTRAINT pk_voucher PRIMARY KEY(id)
-);
+-- CREATE TABLE voucher (
+--   discount CHAR(3),
+--   voucher_date CHAR(14),
+--   CONSTRAINT pk_voucher PRIMARY KEY(id)
+-- );
 
 CREATE TABLE item (
   customerorder_id NUMBER,
