@@ -103,6 +103,19 @@ CREATE TABLE creditCard (
 
 -- successful creation
 
+CREATE TABLE registeredClient (
+  client_email CHAR(60),
+  client_mobile CHAR(9),
+  username CHAR(30),
+  reg_date CHAR(14),
+  reg_time CHAR(14),
+  user_passw CHAR(15),
+  contact_preference CHAR(30),
+  CONSTRAINT pk_regclient PRIMARY KEY(client_email, client_mobile)
+);
+
+-- succesful creation
+
 CREATE TABLE replacementOrder (
   orderdate CHAR(14),
   ordertime CHAR(14),
@@ -123,17 +136,6 @@ CREATE TABLE ReplacementOrder (
   DeliveryInfoID NUMBER,
   CONSTRAINT PK_ReplacementOrder PRIMARY KEY (OrderDate, OrderTime),
   CONSTRAINT FK_ReplacementOrder_DeliveryInfo FOREIGN KEY (DeliveryInfoID) REFERENCES DeliveryInfo(DeliveryInfoID)
-);
-
-CREATE TABLE registeredClient (
-  client_email CHAR(60),
-  client_mobile CHAR(9),
-  username CHAR(30),
-  reg_date CHAR(14),
-  reg_time CHAR(14),
-  user_passw CHAR(15),
-  contact_preference CHAR(30),
-  CONSTRAINT pk_regclient PRIMARY KEY(client_email, client_mobile)
 );
 
 CREATE TABLE customerOrder (
