@@ -86,3 +86,10 @@ BILL_COUNTRY,
 
 
 INSERT INTO creditCard (card_company, card_number, card_holder, card_expiration) SELECT CARD_COMPANY, CARD_NUMBER, CARD_HOLDER, CARD_EXPIRATN from fsdb.trolley;
+
+delete from creditcard where rowid in (select rid from (select rowid as rid,
+       row_number() over (partition by card_number order by card_expiration asc) as rn
+       from creditcard)
+       where rn > 1);
+
+-- insertion into credit cards and deleted duplicates
