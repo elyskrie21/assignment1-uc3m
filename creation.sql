@@ -49,22 +49,24 @@ CREATE TABLE supplier (
 
   -- successful creation
 
-CREATE TABLE deliveryInfo (
+CREATE TABLE delivery (
   dliv_date CHAR(14),
   dliv_time CHAR(14),
-  CONSTRAINT pk_deliveryinfo PRIMARY KEY(id)
+  orderdate CHAR(14),
+  client_email CHAR(60),
+  client_mobile CHAR(9),
+  town CHAR(45),
+  CONSTRAINT fk_delivery FOREIGN KEY(client_email, client_mobile, town) REFERENCES address(client_email, client_mobile, town)
  );
 
 CREATE TABLE replacementOrder (
   orderdate CHAR(14),
   ordertime CHAR(14),
-  status CHAR(30),
-  supplier_id NUMBER,
-  reference_id NUMBER,
+  status CHAR(30), -- do we add an attribute?
   quantity CHAR(2),
   total_payment CHAR(14),
-  deliveryinfo_id NUMBER,
-  CONSTRAINT pk_reporder PRIMARY KEY(id),
+  deliveryinfo_id NUMBER, -- need to add total_payment, retail_price
+  CONSTRAINT pk_reporder PRIMARY KEY(id), -- edit constraints
   CONSTRAINT fk_supplier FOREIGN KEY(supplier_id) REFERENCES supplier(id),
   CONSTRAINT fk_ref FOREIGN KEY(reference_id) REFERENCES reference(id),
   CONSTRAINT fk_delivinfo FOREIGN KEY(deliveryinfo_id) REFERENCES deliveryinfo(id)
@@ -123,7 +125,7 @@ CREATE TABLE customerOrder (
   prodtype CHAR(20),
   packaging CHAR(15),
   town CHAR(45),
-  quantity CHAR(2)
+  quantity CHAR(2) -- need to add 
   CONSTRAINT fk_productinfo FOREIGN KEY(product, barcode, prodtype, packaging) 
   REFERENCES orderedProdInfo(product, barcode, prodtype, packaging)
  );
@@ -192,12 +194,14 @@ CREATE TABLE comments (
 --   CONSTRAINT pk_voucher PRIMARY KEY(id)
 -- );
 
-CREATE TABLE item (
-  customerorder_id NUMBER,
-  reference_id NUMBER,
-  quantity NUMBER,
-  base_price NUMBER,
-  total_price GENERATED ALWAYS AS (quantity * base_price) VIRTUAL,
-  CONSTRAINT pk_item PRIMARY KEY(id),
-  CONSTRAINT fk_reference_id FOREIGN KEY(reference_id) REFERENCES reference(id)
-);
+-- not sure if we need this?
+
+-- CREATE TABLE item (
+--   customerorder_id NUMBER,
+--   reference_id NUMBER,
+--   quantity NUMBER,
+--   base_price NUMBER,
+--   total_price GENERATED ALWAYS AS (quantity * base_price) VIRTUAL,
+--   CONSTRAINT pk_item PRIMARY KEY(id),
+--   CONSTRAINT fk_reference_id FOREIGN KEY(reference_id) REFERENCES reference(id)
+-- );
