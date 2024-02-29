@@ -64,6 +64,7 @@ CREATE TABLE address (
   client_mobile CHAR(9) NULL
 );
 
+--successful creation
 
 CREATE TABLE delivery (
   dliv_date CHAR(14),
@@ -76,6 +77,7 @@ CREATE TABLE delivery (
 
 --CONSTRAINT fk_delivery FOREIGN KEY(client_email, client_mobile, town) REFERENCES address(client_email, client_mobile, town)
 
+--successful creation
 
 
 CREATE TABLE client (
@@ -104,14 +106,23 @@ CREATE TABLE creditCard (
 CREATE TABLE replacementOrder (
   orderdate CHAR(14),
   ordertime CHAR(14),
-  status CHAR(30), -- do we add an attribute?
+  status CHAR(30),
   quantity CHAR(2),
   total_payment CHAR(14),
-  deliveryinfo_id NUMBER, -- need to add total_payment, retail_price
-  CONSTRAINT pk_reporder PRIMARY KEY(id), -- edit constraints
+  deliveryinfo_id NUMBER, 
   CONSTRAINT fk_supplier FOREIGN KEY(supplier_id) REFERENCES supplier(id),
-  CONSTRAINT fk_ref FOREIGN KEY(reference_id) REFERENCES reference(id),
-  CONSTRAINT fk_delivinfo FOREIGN KEY(deliveryinfo_id) REFERENCES deliveryinfo(id)
+  CONSTRAINT fk_ref FOREIGN KEY(reference_id) REFERENCES reference(id)
+);
+
+CREATE TABLE ReplacementOrder (
+  OrderDate CHAR(14),
+  OrderTime CHAR(14),
+  Status CHAR(30),
+  Quantity CHAR(2),
+  TotalPayment CHAR(14),
+  DeliveryInfoID NUMBER,
+  CONSTRAINT PK_ReplacementOrder PRIMARY KEY (OrderDate, OrderTime),
+  CONSTRAINT FK_ReplacementOrder_DeliveryInfo FOREIGN KEY (DeliveryInfoID) REFERENCES DeliveryInfo(DeliveryInfoID)
 );
 
 CREATE TABLE registeredClient (
@@ -153,13 +164,6 @@ CREATE TABLE orderedProdInfo (
   base_price CHAR(10)
   CONSTRAINT pk_ordered PRIMARY KEY(product, barcode, prodtype, packaging)
 );
-
--- CREATE TABLE delivery (
---   item_id NUMBER,
---   address_id NUMBER,
---   deliveryinfo_id NUMBER,
---   CONSTRAINT pk_delivery PRIMARY KEY(id)
--- );
 
 CREATE TABLE billing (
   payment_type CHAR(15),
