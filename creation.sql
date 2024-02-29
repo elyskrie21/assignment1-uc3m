@@ -98,7 +98,6 @@ CREATE TABLE creditCard (
   card_number CHAR(20),
   card_holder CHAR(30),
   card_expiration CHAR(7),
-  CONSTRAINT pk_creditcard PRIMARY KEY(card_number)
 );
 
 -- successful creation
