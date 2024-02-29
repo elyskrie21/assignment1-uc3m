@@ -123,7 +123,7 @@ CREATE TABLE registeredClient (
   reg_date CHAR(14),
   reg_time CHAR(14),
   user_passw CHAR(15),
-  contact_preference CHAR(30)
+  contact_preference CHAR(30),
   CONSTRAINT pk_regclient PRIMARY KEY(client_email, client_mobile)
 );
 
