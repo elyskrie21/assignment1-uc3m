@@ -71,9 +71,10 @@ CREATE TABLE delivery (
   orderdate CHAR(14),
   client_email CHAR(60),
   client_mobile CHAR(9),
-  town CHAR(45),
-  CONSTRAINT fk_delivery FOREIGN KEY(client_email, client_mobile, town) REFERENCES address(client_email, client_mobile, town)
+  town CHAR(45)
  );
+
+--CONSTRAINT fk_delivery FOREIGN KEY(client_email, client_mobile, town) REFERENCES address(client_email, client_mobile, town)
 
 
 
