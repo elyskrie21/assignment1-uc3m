@@ -62,10 +62,8 @@ CREATE TABLE address (
   country CHAR(45) NOT NULL,
   client_email CHAR(60) NULL,
   client_mobile CHAR(9) NULL
-  CONSTRAINT pk_address PRIMARY KEY (client_email, client_mobile, town)
 );
 
--- successful creation
 
 CREATE TABLE delivery (
   dliv_date CHAR(14),
@@ -77,7 +75,6 @@ CREATE TABLE delivery (
   CONSTRAINT fk_delivery FOREIGN KEY(client_email, client_mobile, town) REFERENCES address(client_email, client_mobile, town)
  );
 
--- succesful creation
 
 
 CREATE TABLE client (
