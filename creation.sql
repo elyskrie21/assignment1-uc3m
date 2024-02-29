@@ -116,6 +116,71 @@ CREATE TABLE registeredClient (
 
 -- succesful creation
 
+CREATE TABLE orderedProdInfo (
+  product CHAR(50),
+  barcode CHAR(15),
+  prodtype CHAR(20),
+  packaging CHAR(15),
+  coffea CHAR(20),
+  varietal CHAR(30),
+  origin CHAR(15),
+  roasting CHAR(10),
+  dcafprocess CHAR(12),
+  base_price CHAR(10),
+  CONSTRAINT pk_ordered PRIMARY KEY(product, barcode, prodtype, packaging)
+);
+
+--created table
+
+CREATE TABLE customerOrder (
+  client_email CHAR(60),
+  client_mobile CHAR(9),
+  orderdate CHAR(14),
+  ordertime CHAR(14),
+  product CHAR(50),
+  barcode CHAR(15),
+  prodtype CHAR(20),
+  packaging CHAR(15),
+  town CHAR(45),
+  quantity CHAR(2),
+  CONSTRAINT fk_productinfo FOREIGN KEY(product, barcode, prodtype, packaging),
+  CONSTRAINT pk_order PRIMARY KEY (orderdate, ordertime),
+  REFERENCES orderedProdInfo(product, barcode, prodtype, packaging)
+ );
+
+--created table
+
+CREATE TABLE billing (
+    payment_type CHAR(15),
+    payment_date CHAR(14),
+    payment_time CHAR(14),
+    client_email CHAR(60),
+    client_mobile CHAR(9),
+    town CHAR(45),
+    card_number CHAR(20),
+    CONSTRAINT pk_billing PRIMARY KEY(payment_date, payment_time),
+    CONSTRAINT fk_billing_client FOREIGN KEY(payment_date, payment_time)
+        REFERENCES customerOrder(orderdate, ordertime)
+);
+
+
+-- table created
+
+
+CREATE TABLE comments (
+  RegisteredClientID NUMBER,
+  post_date CHAR(100),
+  post_time CHAR(100),
+  title CHAR(100),
+  text CHAR(100),
+  score CHAR(100),
+  likes CHAR(100) DEFAULT '0',
+  endorsed CHAR(12),
+  CONSTRAINT pk_comment PRIMARY KEY(id),
+);
+
+-- removed FOREIGN KEY (RegisteredClientID) REFERENCES RegisteredClient(ID)
+
 CREATE TABLE replacementOrder (
   orderdate CHAR(14),
   ordertime CHAR(14),
@@ -138,60 +203,6 @@ CREATE TABLE ReplacementOrder (
   CONSTRAINT FK_ReplacementOrder_DeliveryInfo FOREIGN KEY (DeliveryInfoID) REFERENCES DeliveryInfo(DeliveryInfoID)
 );
 
-CREATE TABLE customerOrder (
-  client_email CHAR(60),
-  client_mobile CHAR(9),
-  orderdate CHAR(14),
-  ordertime CHAR(14),
-  product CHAR(50),
-  barcode CHAR(15),
-  prodtype CHAR(20),
-  packaging CHAR(15),
-  town CHAR(45),
-  quantity CHAR(2) -- need to add 
-  CONSTRAINT fk_productinfo FOREIGN KEY(product, barcode, prodtype, packaging) 
-  REFERENCES orderedProdInfo(product, barcode, prodtype, packaging)
- );
-
-CREATE TABLE orderedProdInfo (
-  product CHAR(50),
-  barcode CHAR(15),
-  prodtype CHAR(20),
-  packaging CHAR(15),
-  coffea CHAR(20),
-  varietal CHAR(30),
-  origin CHAR(15),
-  roasting CHAR(10),
-  dcafprocess CHAR(12),
-  base_price CHAR(10)
-  CONSTRAINT pk_ordered PRIMARY KEY(product, barcode, prodtype, packaging)
-);
-
-CREATE TABLE billing (
-  payment_type CHAR(15),
-  payment_date CHAR(14), -- payment_date and payment_time correspond with order_date and order_time
-  payment_time CHAR(14),
-  client_email CHAR(60),
-  client_mobile CHAR(9),
-  town CHAR(45),
-  card_number CHAR(20),
-  CONSTRAINT pk_billing PRIMARY KEY(payment_date, payment_time),
-  CONSTRAINT fk_client FOREIGN KEY(payment_date, payment_time) REFERENCES customerOrder(orderdate, ordertime),
-);
-
-
-CREATE TABLE comments (
-  RegisteredClientID NUMBER,
-  post_date CHAR(100),
-  post_time CHAR(100),
-  title CHAR(100),
-  text CHAR(100),
-  score CHAR(100),
-  likes CHAR(100) DEFAULT '0',
-  endorsed CHAR(12),
-  CONSTRAINT pk_comment PRIMARY KEY(id),
-  FOREIGN KEY (RegisteredClientID) REFERENCES RegisteredClient(ID)
-);
 
 -- CREATE TABLE voucher (
 --   discount CHAR(3),
