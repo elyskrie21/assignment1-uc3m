@@ -1,32 +1,39 @@
-CREATE TABLE product (
-  name CHAR(50),
+-- CREATE TABLE product (
+--   name CHAR(50),
+--   coffea CHAR(20),
+--   varietal CHAR(30),
+--   origin CHAR(15),
+--   roasting CHAR(10),
+--   dcafprocess CHAR(12),
+--   format CHAR(20),
+--   packaging CHAR(15),
+--   CONSTRAINT pk_product PRIMARY KEY(name)
+--  );
+
+
+CREATE TABLE reference (
+  barcode CHAR(15),
+  product CHAR(50),
+  market_format CHAR(20),
   coffea CHAR(20),
   varietal CHAR(30),
   origin CHAR(15),
   roasting CHAR(10),
   dcafprocess CHAR(12),
-  format VARCHAR2(20),
-  packaging VARCHAR2(15),
-  CONSTRAINT pk_product PRIMARY KEY(name)
- );
-
-
-CREATE TABLE reference (
-  barcode CHAR(15),
-  packaging NUMBER,
+  packaging CHAR(15),
   retail_price NUMBER,
-  cur_stock CHAR(5),
-  min_stock CHAR(5) DEFAULT 5,
-  max_stock CHAR(5) DEFAULT 15,
+  cur_stock NUMBER,
+  min_stock NUMBER DEFAULT 5,
+  max_stock NUMBER DEFAULT 15,
   CONSTRAINT pk_ref PRIMARY KEY(barcode, packaging, retail_price),
   CONSTRAINT valid_cur_stock CHECK (cur_stock >= 0),
   CONSTRAINT valid_min_stock CHECK (min_stock >= 0),
   CONSTRAINT valid_max_stock CHECK (max_stock >= 0),
-  CONSTRAINT valid_max_min CHECK (min_stock <= max_stock),
+  CONSTRAINT valid_max_min CHECK (min_stock <= max_stock)
 );
 
 CREATE TABLE supplier (
-  name CHAR(35) UNIQUE,
+  supplier_name CHAR(35) UNIQUE,
   prov_taxid CHAR(10) UNIQUE,
   prov_bankacc CHAR(30) UNIQUE,
   prov_address CHAR(120) UNIQUE,
@@ -34,8 +41,7 @@ CREATE TABLE supplier (
   prov_person CHAR(90) UNIQUE,
   prov_email CHAR(60) UNIQUE,
   prov_mobile CHAR(9) UNIQUE,
-  cost_price NUMBER,
-  CONSTRAINT pk_supplier PRIMARY KEY(name)
+  cost_price NUMBER
 );
 
 CREATE TABLE deliveryInfo (
