@@ -10,6 +10,8 @@ CREATE TABLE product (
   CONSTRAINT pk_product PRIMARY KEY(product_name, packaging, format)
  );
 
+-- successful creation
+
 CREATE TABLE reference (
   barcode CHAR(15),
   product_name CHAR(50),
@@ -27,7 +29,7 @@ CREATE TABLE reference (
   CONSTRAINT fk_ref FOREIGN KEY(product_name, format, packaging) REFERENCES product(product_name, format, packaging)
 );
 
--- add this foreign key constraint using ALTER TABLE
+-- successful creation
 
 CREATE TABLE supplier (
   supplier_name CHAR(35),
@@ -41,11 +43,11 @@ CREATE TABLE supplier (
   prov_person CHAR(90),
   prov_email CHAR(60),
   prov_mobile CHAR(9),
-  cost_price CHAR(12)
-  CONSTRAINT fk_supplier
+  cost_price CHAR(12),
+  CONSTRAINT fk_supplier FOREIGN KEY(product_name, format, packaging) REFERENCES product(product_name, format, packaging)
 );
 
-  -- CONSTRAINT pk_supplier PRIMARY KEY(supplier_name)
+  -- successful creation
 
 CREATE TABLE deliveryInfo (
   dliv_date CHAR(14),
@@ -70,24 +72,27 @@ CREATE TABLE replacementOrder (
 
 
 CREATE TABLE client (
-  client_email CHAR(60),
-  client_mobile CHAR(9),
-  CONSTRAINT pk_client PRIMARY KEY(id)
+  client_email CHAR(60) NULL,
+  client_mobile CHAR(9) NULL
 );
+
+-- successful creation
 
 
 CREATE TABLE address (
-  waytype CHAR(10),
-  wayname CHAR(30),
+  waytype CHAR(10) NOT NULL,
+  wayname CHAR(30) NOT NULL,
   gate CHAR(3) NULL,
   block CHAR(1) NULL,
   stairw CHAR(2) NULL,
   floor CHAR(7) NULL,
   door CHAR(2) NULL,
-  zip CHAR(5),
-  town CHAR(45),
-  country CHAR(45)
+  zip CHAR(5) NOT NULL,
+  town CHAR(45) NOT NULL,
+  country CHAR(45) NOT NULL
 );
+
+-- successful creation
 
 CREATE TABLE customerOrder (
   client_id NUMBER,
@@ -115,6 +120,7 @@ CREATE TABLE creditCard (
   CONSTRAINT pk_creditcard PRIMARY KEY(card_number)
 );
 
+-- successful creation
 
 CREATE TABLE billing (
   customerorder_id NUMBER,
