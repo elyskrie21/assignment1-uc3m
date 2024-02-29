@@ -1,27 +1,21 @@
--- CREATE TABLE product (
---   name CHAR(50),
---   coffea CHAR(20),
---   varietal CHAR(30),
---   origin CHAR(15),
---   roasting CHAR(10),
---   dcafprocess CHAR(12),
---   format CHAR(20),
---   packaging CHAR(15),
---   CONSTRAINT pk_product PRIMARY KEY(name)
---  );
-
-
-CREATE TABLE reference (
-  barcode CHAR(15),
-  product CHAR(50),
-  market_format CHAR(20),
+CREATE TABLE product (
+  product_name CHAR(50),
   coffea CHAR(20),
   varietal CHAR(30),
   origin CHAR(15),
   roasting CHAR(10),
   dcafprocess CHAR(12),
+  format CHAR(20),
   packaging CHAR(15),
-  retail_price NUMBER,
+  CONSTRAINT pk_product PRIMARY KEY(product_name, packaging, format)
+ );
+
+CREATE TABLE reference (
+  barcode CHAR(15),
+  product_name CHAR(50),
+  format CHAR(20),
+  packaging CHAR(15),
+  retail_price CHAR(14),
   cur_stock NUMBER,
   min_stock NUMBER DEFAULT 5,
   max_stock NUMBER DEFAULT 15,
@@ -29,20 +23,29 @@ CREATE TABLE reference (
   CONSTRAINT valid_cur_stock CHECK (cur_stock >= 0),
   CONSTRAINT valid_min_stock CHECK (min_stock >= 0),
   CONSTRAINT valid_max_stock CHECK (max_stock >= 0),
-  CONSTRAINT valid_max_min CHECK (min_stock <= max_stock)
+  CONSTRAINT valid_max_min CHECK (min_stock <= max_stock),
+  CONSTRAINT fk_ref FOREIGN KEY(product_name, format, packaging) REFERENCES product(product_name, format, packaging)
 );
 
+-- add this foreign key constraint using ALTER TABLE
+
 CREATE TABLE supplier (
-  supplier_name CHAR(35) UNIQUE,
-  prov_taxid CHAR(10) UNIQUE,
-  prov_bankacc CHAR(30) UNIQUE,
-  prov_address CHAR(120) UNIQUE,
-  prov_country CHAR(45) UNIQUE,
-  prov_person CHAR(90) UNIQUE,
-  prov_email CHAR(60) UNIQUE,
-  prov_mobile CHAR(9) UNIQUE,
-  cost_price NUMBER
+  supplier_name CHAR(35),
+  product_name CHAR(50),
+  format CHAR(20),
+  packaging CHAR(15),
+  prov_taxid CHAR(10),
+  prov_bankacc CHAR(30),
+  prov_address CHAR(120),
+  prov_country CHAR(45),
+  prov_person CHAR(90),
+  prov_email CHAR(60),
+  prov_mobile CHAR(9),
+  cost_price CHAR(12)
+  CONSTRAINT fk_supplier
 );
+
+  -- CONSTRAINT pk_supplier PRIMARY KEY(supplier_name)
 
 CREATE TABLE deliveryInfo (
   dliv_date CHAR(14),
@@ -83,8 +86,7 @@ CREATE TABLE address (
   door CHAR(2) NULL,
   zip CHAR(5),
   town CHAR(45),
-  country CHAR(45),
-  CONSTRAINT pk_address PRIMARY KEY(id)
+  country CHAR(45)
 );
 
 CREATE TABLE customerOrder (
@@ -105,13 +107,12 @@ CREATE TABLE delivery (
 );
 
 
-
 CREATE TABLE creditCard (
   card_company CHAR(15),
-  card_number CHAR(20) UNIQUE,
+  card_number CHAR(20),
   card_holder CHAR(30),
   card_expiration CHAR(7),
-  CONSTRAINT pk_creditcard PRIMARY KEY(id)
+  CONSTRAINT pk_creditcard PRIMARY KEY(card_number)
 );
 
 
