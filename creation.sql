@@ -111,6 +111,7 @@ CREATE TABLE address (
   country CHAR(45) NOT NULL,
   client_email CHAR(60) NULL,
   client_mobile CHAR(9) NULL
+  CONSTRAINT pk_address PRIMARY KEY (client_email, client_mobile, town)
 );
 
 -- successful creation
