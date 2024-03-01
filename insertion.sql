@@ -1,3 +1,5 @@
+/* format can be extended to other tables */
+
 INSERT INTO product (product_name, coffea, varietal, origin, roasting, dcafprocess) 
 SELECT PRODUCT, 
        MAX(COFFEA) AS coffea, 
@@ -7,34 +9,6 @@ SELECT PRODUCT,
        MAX(DECAF) AS decaf 
        FROM fsdb.catalogue 
 GROUP BY product;
-
--- successful insertion
-INSERT INTO address (WAYTYPE, WAYNAME, GATE, BLOCK, STAIRW, FLOOR, DOOR, ZIP, TOWN, COUNTRY)
-SELECT BILL_WAYTYPE,
-       BILL_WAYNAME,
-       BILL_GATE,
-       BILL_BLOCK,
-       BILL_STAIRW, 
-       BILL_FLOOR,
-       BILL_DOOR,
-       BILL_ZIP,
-       BILL_TOWN,
-       BILL_COUNTRY
-       FROM fsdb.trolley;
-
-INSERT INTO DeliveryInfo (DLIV_DATE, DLIV_TIME)
-SELECT DLIV_DATE,
-       DLIV_TIME 
-       FROM fsdb.trolley
-       WHERE NOT (
-              DLIV_DATE IS NULL OR
-              DLIV_TIME IS NULL
-       ); 
-
-INSERT INTO Voucher (discount, date)
-SELECT DISCOUNT FROM fsdb.trolley;
-
-
 
 INSERT INTO REFERENCE (product, barcode, format, packaging, retail_price, cur_stock, min_stock, max_stock) 
 SELECT 
@@ -53,8 +27,6 @@ SELECT
        PACKAGING IS NULL OR
        RETAIL_PRICE IS NULL);
 
--- successful insertion
-
 INSERT INTO SUPPLIER (name, prov_taxid, prov_bankacc, prov_address, prov_country, prov_person, prov_email, prov_mobile, cost_price)
 SELECT DISTINCT SUPPLIER,
        PROV_TAXID, 
@@ -68,4 +40,39 @@ SELECT DISTINCT SUPPLIER,
        from fsdb.catalogue 
        WHERE SUPPLIER IS NOT NULL;
 
--- insertion into credit cards and deleted duplicates
+INSERT INTO customerOrder (id, client_email, client_mobile, orderdate, ordertime, product, barcode, prodtype, packaging, town, quantity)
+       SELECT row_number(),
+       CLIENT_EMAIL,
+       CLIENT_MOBILE,
+       ORDERDATE,
+       ORDERTIME,
+       PRODUCT,
+       BARCODE,
+       PRODTYPE,
+       PACKAGING,
+       TOWN,
+       QUANTITY,
+       from fsdb.trolley,
+       WHERE ORDERDATE IS NOT NULL and ORDERTIME IS NOT NULL;
+
+INSERT INTO billing (id, payment_type, payment_date, payment_time, customer_order, credit_card, address)
+       SELECT row_number(),
+       PAYMENT_TYPE,
+       PAYMENT_DATE from fsdb.trolley
+       customerOrder.id
+       CARD_NUMBER from fsdb.trolley,
+       address.id;
+
+INSERT INTO address (id, WAYTYPE, WAYNAME, GATE, BLOCK, STAIRW, FLOOR, DOOR, ZIP, TOWN, COUNTRY)
+SELECT row_number(),
+       BILL_WAYTYPE,
+       BILL_WAYNAME,
+       BILL_GATE,
+       BILL_BLOCK,
+       BILL_STAIRW, 
+       BILL_FLOOR,
+       BILL_DOOR,
+       BILL_ZIP,
+       BILL_TOWN,
+       BILL_COUNTRY
+       FROM fsdb.trolley;
