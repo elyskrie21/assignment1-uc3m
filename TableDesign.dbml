@@ -11,23 +11,18 @@ Table product {
   decaf bool
 }
 
-Table productDetails {
-  id bigint [pk]
-  product varchar [ref: > product.product_name]
-  format varchar
-  packaging varchar
-}
-
 Table reference {
   product bigint [ref: - product.product_name] // one-to-one for each product has one reference
   barcode varchar [unique]
+  format varchar
+  packaging varchar
   retail_price bigint
   cur_stock bigint [default: 0]
   min_stock bigint [default: 5]
   max_stock bigint [default: 15]
 
   indexes {
-    (barcode, retail_price) [pk]
+    (barcode, retail_price, packaging) [pk]
   }
 }
 
@@ -44,7 +39,6 @@ Table supplier {
 }
 
 Table ReplacementOrder {
-  id bigint [primary key]
   ORDERDATE varchar
   ORDERTIME varchar
   STATUS varchar
@@ -52,7 +46,7 @@ Table ReplacementOrder {
   REFERENCE bigint [ref: > reference.barcode] // many replacement orders can be for the same reference
   Quantity bigint
   TOTAL_PAYMENT decimal
-  DeliveryInfo bigint [ref: - DeliveryInfo.id] // one replacemnt order arrives at one point in time
+  DeliveryInfo bigint [ref: - DeliveryInfo.DLIV_DATE] // one replacemnt order arrives at one point in time
 }
 
 Table CustomerOrder {
@@ -60,11 +54,11 @@ Table CustomerOrder {
   Client bigint [ref: > Client.CLIENT_EMAIL] // many customer orders can be from the same client
   ORDERDATE varchar
   ORDERTIME varchar
-  Address bigint [ref: > Address.id] // many customer orders can go to the same address
+  Address bigint [ref: > Address.BLOCK] // many customer orders can go to the same address
 }
 
 Table Address {
-  id bigint [primary key]
+  id bigint [pk]
   WAYTYPE varchar 
   WAYNAME varchar
   GATE varchar
@@ -78,16 +72,19 @@ Table Address {
 }
 
 Table DeliveryInfo {
-  id bigint [primary key]
   DLIV_DATE varchar
   DLIV_TIME varchar
+
+  indexes {
+    (DLIV_DATE, DLIV_TIME) [pk]
+  }
 }
 
 Table Delivery {
   id bigint [primary key]
   ITEM bigint [ref: - Item.id] // one item is part of one delivery
   Address bigint [ref : > Address.id] // many deliveries can go to the same address
-  DeliveryInfo bigint [ref: > DeliveryInfo.id] // many deliveries can arrive at the same time
+  DeliveryInfo bigint [ref: > DeliveryInfo.DLIV_DATE] // many deliveries can arrive at the same time
 }
 
 Table Billing {
@@ -141,7 +138,7 @@ Table RegisteredClient {
 Table RegisteredClientAddress {
   id bigint [primary key]
   RegisteredClient bigint [ref: > RegisteredClient.username] 
-  Address bigint [ref: - Address.id]
+  Address bigint [ref: - Address.BLOCK]
 } 
 
 Table Voucher {
