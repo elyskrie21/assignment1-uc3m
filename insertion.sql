@@ -9,6 +9,32 @@ SELECT PRODUCT,
 GROUP BY product;
 
 -- successful insertion
+INSERT INTO address (WAYTYPE, WAYNAME, GATE, BLOCK, STAIRW, FLOOR, DOOR, ZIP, TOWN, COUNTRY)
+SELECT BILL_WAYTYPE,
+       BILL_WAYNAME,
+       BILL_GATE,
+       BILL_BLOCK,
+       BILL_STAIRW, 
+       BILL_FLOOR,
+       BILL_DOOR,
+       BILL_ZIP,
+       BILL_TOWN,
+       BILL_COUNTRY
+       FROM fsdb.trolley;
+
+INSERT INTO DeliveryInfo (DLIV_DATE, DLIV_TIME)
+SELECT DLIV_DATE,
+       DLIV_TIME 
+       FROM fsdb.trolley
+       WHERE NOT (
+              DLIV_DATE IS NULL OR
+              DLIV_TIME IS NULL
+       ); 
+
+INSERT INTO Voucher (discount, date)
+SELECT DISCOUNT FROM fsdb.trolley;
+
+
 
 INSERT INTO REFERENCE (product, barcode, format, packaging, retail_price, cur_stock, min_stock, max_stock) 
 SELECT 
