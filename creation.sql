@@ -95,9 +95,9 @@ CREATE TABLE client (
 
 CREATE TABLE creditCard (
   card_company CHAR(15),
-  card_number CHAR(20),
+  card_number CHAR(20) PRIMARY KEY,
   card_holder CHAR(30),
-  card_expiration CHAR(7),
+  card_expiration CHAR(7)
 );
 
 -- successful creation
