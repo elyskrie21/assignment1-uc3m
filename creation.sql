@@ -26,15 +26,15 @@ CREATE TABLE reference (
 );
 
 CREATE TABLE supplier (
-  name CHAR(35),
-  prov_taxid CHAR(10) NULL,
-  prov_bankacc CHAR(30) NULL,
-  prov_address CHAR(120) NULL,
-  prov_country CHAR(45) NULL,
-  prov_person CHAR(90) NULL,
-  prov_email CHAR(60) NULL,
-  prov_mobile CHAR(9) NULL,
-  cost_price CHAR(12) NULL
+  name CHAR(35) UNIQUE,
+  prov_taxid CHAR(10) UNIQUE,
+  prov_bankacc CHAR(30) UNIQUE,
+  prov_address CHAR(120) UNIQUE,
+  prov_country CHAR(45) UNIQUE,
+  prov_person CHAR(90) UNIQUE,
+  prov_email CHAR(60) UNIQUE,
+  prov_mobile CHAR(9) UNIQUE,
+  cost_price CHAR(12) UNIQUE
   CONSTRAINT pk_supp PRIMARY KEY(name)
 );
 
@@ -52,9 +52,6 @@ CREATE TABLE replacementOrder (
 ALTER TABLE replacementOrder ADD CONSTRAINT pk_repl PRIMARY KEY(orderdate, ordertime);
 ALTER TABLE replacementOrder ADD CONSTRAINT fk_supp FOREIGN KEY(supplier) REFERENCES supplier(name);
 ALTER TABLE replacementOrder ADD CONSTRAINT fk_deliv FOREIGN KEY(deliveryinfo) REFERENCES deliveryInfo(DLIV_DATE);
-
--- ADD   status CHAR(30), column
--- ADD   total_payment CHAR(14),
 
 CREATE TABLE customerOrder (
   client_email CHAR(60),
@@ -120,7 +117,7 @@ CREATE TABLE billing (
 );
 
 CREATE TABLE creditCard (
-  card_number NUMBER,
+  card_number NUMBER UNIQUE,
   card_company CHAR(15),
   card_holder CHAR(30),
   card_expiration CHAR(7),
@@ -179,11 +176,13 @@ CREATE TABLE voucher (
 CREATE TABLE comments (
   id NUMBER PRIMARY KEY,
   RegisteredClientID NUMBER,
-  post_date CHAR(100),
-  post_time CHAR(100),
+  post_date DATE,
+  post_time DATE,
   title CHAR(100),
   text CHAR(100),
   score CHAR(100),
-  likes CHAR(100) DEFAULT '0',
-  endorsed CHAR(12) 
+  likes NUMBER DEFAULT 0,
+  endorsed CHAR(12),
+  CONSTRAINT chk_score CHECK (score >= 1 and score <= 5),
+  CONSTRAINT chk_likes CHECK (likes < 1000000000)
 );
