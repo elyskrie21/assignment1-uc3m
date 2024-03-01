@@ -1,6 +1,7 @@
 // Use DBML to define your database structure
 // Docs: https://dbml.dbdiagram.io/docs
 
+
 Table product {
   product_name varchar [unique, primary key]
   coffea varchar
@@ -11,6 +12,7 @@ Table product {
 }
 
 Table productDetails {
+  id bigint [pk]
   product varchar [ref: > product.product_name]
   format varchar
   packaging varchar
@@ -124,7 +126,7 @@ Table Client {
 }
 
 Table RegisteredClient {
-  username varchar [pk]
+  username varchar [pk, unique]
   reg_date date
   reg_time time
   user_passw varchar
@@ -151,6 +153,7 @@ Table Voucher {
 Table Comment {
   id int [pk]
   RegisteredClient bigint [ref: - RegisteredClient.username] // one comment belongs to one user 
+  Product varchar [ref: > product.product_name]
   post_date date
   post_time time
   title varchar
