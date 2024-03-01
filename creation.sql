@@ -165,8 +165,8 @@ CREATE TABLE billing (
 
 -- table created
 
-
 CREATE TABLE comments (
+  id NUMBER PRIMARY KEY,
   RegisteredClientID NUMBER,
   post_date CHAR(100),
   post_time CHAR(100),
@@ -174,11 +174,10 @@ CREATE TABLE comments (
   text CHAR(100),
   score CHAR(100),
   likes CHAR(100) DEFAULT '0',
-  endorsed CHAR(12),
-  CONSTRAINT pk_comment PRIMARY KEY(id),
+  endorsed CHAR(12)
 );
 
--- removed FOREIGN KEY (RegisteredClientID) REFERENCES RegisteredClient(ID)
+-- table created, could not find another way
 
 CREATE TABLE replacementOrder (
   orderdate CHAR(14),
