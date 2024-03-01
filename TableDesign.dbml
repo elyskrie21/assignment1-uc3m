@@ -100,6 +100,7 @@ Table Billing {
 
 Table CreditCard {
   CARD_NUMBER bigint [unique, pk]
+  CARD_COMPANY varchar
   CARD_HOLDER varchar
   CARD_EXPIRATN varchar
 }
