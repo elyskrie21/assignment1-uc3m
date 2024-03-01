@@ -1,44 +1,36 @@
 // Use DBML to define your database structure
 // Docs: https://dbml.dbdiagram.io/docs
 
-
 Table product {
-  id bigint [primary key]
-  name varchar [unique]
+  product_name varchar [unique, primary key]
   coffea varchar
   varietal varchar
   origin varchar
   roasting varchar
   decaf bool
+}
+
+Table productDetails {
+  product varchar [ref: > product.product_name]
   format varchar
   packaging varchar
 }
 
 Table reference {
-  id bigint [primary key]
-  product bigint [ref: - product.id] // one-to-one for each product has one reference
+  product bigint [ref: - product.product_name] // one-to-one for each product has one reference
   barcode varchar [unique]
   retail_price bigint
   cur_stock bigint [default: 0]
   min_stock bigint [default: 5]
   max_stock bigint [default: 15]
-}
 
-Table replacementOrder {
-  id bigint [primary key]
-  supplier bigint [ref: > supplier.id] // many-to-one since many replacement orders can belong to one supplier
-  reference bigint [ref: > reference.id] // many-to-one since many replacement orders can belong to one reference
-  Quantity bigint
-  OrderTime varchar
-  OrderDate varchar
-  Status varchar
-  total_payment bigint
-  DLIV_DATE varchar [null]
+  indexes {
+    (barcode, retail_price) [pk]
+  }
 }
 
 Table supplier {
-  id bigint [primary key]
-  name varchar [unique]
+  name varchar [unique, primary key]
   PROV_TAXID varchar [unique]
   PROV_BANKACC varchar [unique]
   PROV_ADDRESS varchar [unique]
@@ -54,8 +46,8 @@ Table ReplacementOrder {
   ORDERDATE varchar
   ORDERTIME varchar
   STATUS varchar
-  SUPPLIER bigint [ref: > supplier.id] // many replacement orders can be from the same supplier
-  REFERENCE bigint [ref: > reference.id] // many replacement orders can be for the same reference
+  SUPPLIER bigint [ref: > supplier.name] // many replacement orders can be from the same supplier
+  REFERENCE bigint [ref: > reference.barcode] // many replacement orders can be for the same reference
   Quantity bigint
   TOTAL_PAYMENT decimal
   DeliveryInfo bigint [ref: - DeliveryInfo.id] // one replacemnt order arrives at one point in time
@@ -63,7 +55,7 @@ Table ReplacementOrder {
 
 Table CustomerOrder {
   id bigint [primary key]
-  Client bigint [ref: > Client.id] // many customer orders can be from the same client
+  Client bigint [ref: > Client.CLIENT_EMAIL] // many customer orders can be from the same client
   ORDERDATE varchar
   ORDERTIME varchar
   Address bigint [ref: > Address.id] // many customer orders can go to the same address
@@ -102,13 +94,12 @@ Table Billing {
   PAYMENT_DATE varchar
   PAYMENT_TIME varchar
   CustomerOrder bigint [ref: - CustomerOrder.id] // each bill has one order
-  CreditCard bigint [ref: > CreditCard.id] // many bills can have the same credit card
+  CreditCard bigint [ref: > CreditCard.CARD_NUMBER] // many bills can have the same credit card
   BillingAdress bigint [ref: > Address.id] // many bills can have the same billing address
 }
 
 Table CreditCard {
-  id bigint [primary key]
-  CARD_NUMBER bigint
+  CARD_NUMBER bigint [unique, pk]
   CARD_HOLDER varchar
   CARD_EXPIRATN varchar
 }
@@ -116,35 +107,37 @@ Table CreditCard {
 Table Item {
   id bigint [primary key]
   CustomerOrder bigint [ref: > CustomerOrder.id] // many Items can have the same customer order
-  Reference bigint [ref: - reference.id] // each Item has one Reference 
+  Reference bigint [ref: - reference.barcode] // each Item has one Reference 
   Quantity bigint
   BASE_PRICE bigint
   Total_Price bigint
 }
 
 Table Client {
-  id bigint [primary key]
   CLIENT_EMAIL varchar
   CLIENT_MOBILE varchar
+
+  indexes {
+    (CLIENT_EMAIL, CLIENT_MOBILE) [pk]
+  }
 }
 
 Table RegisteredClient {
-  id bigint [primary key]
-  username varchar
+  username varchar [pk]
   reg_date date
   reg_time time
   user_passw varchar
   client_name varchar
   client_surn1 varchar
   client_surn2 varchar
-  Client bigint [ref: - Client.id] // all registered clients are clients 
+  Client bigint [ref: - Client.CLIENT_EMAIL] // all registered clients are clients 
   contact_preference varchar [default: "sms"]
   voucher_id int [ref: > Voucher.id]
 }
 
 Table RegisteredClientAddress {
   id bigint [primary key]
-  RegisteredClient bigint [ref: > RegisteredClient.id] 
+  RegisteredClient bigint [ref: > RegisteredClient.username] 
   Address bigint [ref: - Address.id]
 } 
 
@@ -156,7 +149,7 @@ Table Voucher {
 
 Table Comment {
   id int [pk]
-  RegisteredClient bigint [ref: - RegisteredClient.id] // one comment belongs to one user 
+  RegisteredClient bigint [ref: - RegisteredClient.username] // one comment belongs to one user 
   post_date date
   post_time time
   title varchar
